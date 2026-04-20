@@ -53,6 +53,9 @@ app.use('/api/upload', uploadRoutes);
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', message: 'Server running' }));
 
+// Root health check for hosting platforms
+app.get('/', (req, res) => res.json({ status: 'ok', message: 'Server running' }));
+
 // Chrome DevTools compatibility endpoint (harmless 404)
 app.get('/.well-known/appspecific/*', (req, res) => {
   res.status(404).json({ message: 'Not found' });
@@ -70,6 +73,4 @@ app.use(errorHandler);
 initSocket(io);
 
 const PORT = process.env.PORT || 5000;
-httpServer.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+httpServer.listen(PORT);

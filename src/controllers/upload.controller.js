@@ -8,20 +8,11 @@ import http from 'http';
 export const uploadGroupFile = async (req, res, next) => {
   try {
     if (!req.file) {
-      console.error('No file in request');
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    console.log('📁 File received:', {
-      originalname: req.file.originalname,
-      size: req.file.size,
-      mimetype: req.file.mimetype,
-    });
-    console.log('☁️ Cloudinary response:', req.file);
-
     // Validate Cloudinary credentials
     if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY) {
-      console.error('❌ Cloudinary credentials missing!');
       return res.status(500).json({ message: 'File upload service not configured' });
     }
 
@@ -37,8 +28,6 @@ export const uploadGroupFile = async (req, res, next) => {
     const publicId = req.file.public_id || req.file.filename;
     
     if (!publicId) {
-      console.error('❌ No public_id or filename from Cloudinary!');
-      console.error('Full file object:', JSON.stringify(req.file, null, 2));
       return res.status(400).json({ 
         message: 'File upload to Cloudinary failed',
         details: 'No public_id received - check Cloudinary credentials in .env'
@@ -54,15 +43,11 @@ export const uploadGroupFile = async (req, res, next) => {
       uploadedBy: req.user._id,
     };
 
-    console.log('✅ Saving file data:', fileData);
-
     group.files.push(fileData);
     await group.save();
 
     res.status(201).json({ success: true, file: fileData });
   } catch (error) {
-    console.error('❌ Upload error:', error.message);
-    console.error('Stack:', error.stack);
     next(error);
   }
 };
@@ -113,7 +98,6 @@ export const downloadGroupFile = async (req, res, next) => {
 
     // Validate required file fields
     if (!file.publicId) {
-      console.error('Invalid file data:', file);
       return res.status(400).json({ 
         message: 'File data is incomplete',
         details: `Missing publicId: ${!file.publicId}`
@@ -134,7 +118,6 @@ export const downloadGroupFile = async (req, res, next) => {
 
     return res.status(200).json({ success: true, redirectUrl });
   } catch (error) {
-    console.error('Download controller error:', error);
     next(error);
   }
 };

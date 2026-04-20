@@ -20,26 +20,8 @@ const connectDB = async () => {
       configureMongoDns();
     }
 
-    const conn = await mongoose.connect(process.env.MONGO_URI);
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    const isSrvDnsError = error?.message?.includes('querySrv') || error?.message?.includes('ECONNREFUSED');
-    const isAuthError = error?.message?.toLowerCase().includes('bad auth') || error?.message?.toLowerCase().includes('authentication failed');
-
-    console.error(`❌ MongoDB Connection Error: ${error.message}`);
-
-    if (isSrvDnsError) {
-      console.error(
-        'Atlas SRV lookup failed. Use the standard MongoDB Atlas connection string from the Drivers page, then allow your IP in Network Access and restart the server.'
-      );
-    }
-
-    if (isAuthError) {
-      console.error(
-        'Atlas authentication failed. Verify the database username and password in MONGO_URI, reset the Atlas database user password if needed, and URL-encode the password if it contains special characters.'
-      );
-    }
-
+    await mongoose.connect(process.env.MONGO_URI);
+  } catch {
     process.exit(1);
   }
 };

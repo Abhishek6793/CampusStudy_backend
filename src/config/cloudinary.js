@@ -7,7 +7,7 @@ dotenv.config();
 
 // Check if credentials exist
 if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-  console.error('⚠️ Missing Cloudinary credentials in .env file');
+  throw new Error('Missing Cloudinary credentials in .env file');
 }
 
 cloudinary.config({

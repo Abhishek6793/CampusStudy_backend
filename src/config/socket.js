@@ -5,8 +5,6 @@ const onlineUsers = new Map();
 
 export const initSocket = (io) => {
   io.on('connection', (socket) => {
-    console.log(`🔌 Socket connected: ${socket.id}`);
-
     // User comes online
     socket.on('user:online', (userId) => {
       onlineUsers.set(userId, socket.id);
@@ -16,7 +14,6 @@ export const initSocket = (io) => {
     // Join a group room
     socket.on('group:join', (groupId) => {
       socket.join(groupId);
-      console.log(`Socket ${socket.id} joined group room: ${groupId}`);
     });
 
     // Leave a group room
@@ -67,7 +64,6 @@ export const initSocket = (io) => {
         }
       }
       io.emit('users:online', Array.from(onlineUsers.keys()));
-      console.log(`🔌 Socket disconnected: ${socket.id}`);
     });
   });
 };
