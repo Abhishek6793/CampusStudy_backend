@@ -53,6 +53,9 @@ app.use('/api/upload', uploadRoutes);
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', message: 'Server running' }));
 
+// Render default health check path
+app.get('/health', (req, res) => res.json({ status: 'ok', message: 'Server running' }));
+
 // Root health check for hosting platforms
 app.get('/', (req, res) => res.json({ status: 'ok', message: 'Server running' }));
 
@@ -73,4 +76,6 @@ app.use(errorHandler);
 initSocket(io);
 
 const PORT = process.env.PORT || 5000;
-httpServer.listen(PORT);
+httpServer.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
